@@ -1,25 +1,29 @@
 plugins {
-    id("java")
+	java
+	id("org.springframework.boot") version "3.1.5"
+	id("io.spring.dependency-management") version "1.1.3"
 }
 
+group = "aaagt.springboot"
+version = "0.0.1-SNAPSHOT"
 
-group = "org.example"
-
-
-allprojects {
-    repositories {
-        mavenCentral()
-    }
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
 }
 
+repositories {
+	mavenCentral()
+}
 
-subprojects {
-    version = "1.0-SNAPSHOT"
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
 
-    tasks.withType<JavaCompile>().configureEach {
-        //options.compilerArgs.add("--enable-preview")
-        javaCompiler.set(javaToolchains.compilerFor {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        })
-    }
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
+tasks.bootBuildImage {
+	builder.set("paketobuildpacks/builder-jammy-base:latest")
 }
